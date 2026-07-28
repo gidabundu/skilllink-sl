@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Building, User, CheckCircle2, ArrowRight } from 'lucide-react'
 
-export default function Register() {
+function Register() {
   const searchParams = useSearchParams()
   const initialRole = searchParams.get('role') === 'employer' ? 'EMPLOYER' : 'SEEKER'
 
@@ -212,5 +212,17 @@ export default function Register() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
+      </div>
+    }>
+      <Register />
+    </Suspense>
   )
 }
