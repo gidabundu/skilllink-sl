@@ -51,12 +51,11 @@ export default function ApplicationTableRow({ app }: { app: any }) {
           >
             <Eye className="h-3.5 w-3.5" /> Review
           </button>
+          {showModal && (
+            <ReviewApplicationModal application={app} onClose={() => setShowModal(false)} />
+          )}
         </td>
       </tr>
-
-      {showModal && (
-        <ReviewApplicationModal application={app} onClose={() => setShowModal(false)} />
-      )}
     </>
   )
 }
