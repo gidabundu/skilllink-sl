@@ -89,31 +89,31 @@ export default async function AdminDashboard() {
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-2">
         <div>
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-secondary-500 rounded-xl flex items-center justify-center shadow-md shadow-secondary-500/20">
+            <div className="h-10 w-10 bg-secondary-500 rounded-xl flex items-center justify-center shadow-md shadow-secondary-500/20 shrink-0">
               <ShieldCheck className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Admin Panel</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Admin Panel</h1>
           </div>
-          <p className="text-slate-500 mt-1 ml-14">Welcome back, {user.name}. Here's your platform overview.</p>
+          <p className="text-slate-500 mt-1 ml-13 text-sm">Welcome back, {user.name}.</p>
         </div>
-        <div className="text-right text-sm text-slate-400 font-medium">
+        <div className="text-left sm:text-right text-xs text-slate-400 font-medium">
           <div>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
         </div>
       </div>
 
-      {/* Sleek Inline Stats */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-8 flex flex-wrap items-center justify-between gap-6 overflow-x-auto">
-        {statCards.map((card, idx) => (
-          <div key={card.label} className={`flex items-center gap-3 min-w-fit ${idx !== statCards.length - 1 ? 'pr-6 border-r border-slate-100' : ''}`}>
-            <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${card.light}`}>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+        {statCards.map((card) => (
+          <div key={card.label} className={`flex items-center gap-3 p-3 bg-white rounded-2xl border border-slate-100 shadow-sm`}>
+            <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${card.light}`}>
               <div className={card.text}>{card.icon}</div>
             </div>
             <div>
               <div className={`text-xl font-black leading-none mb-1 ${card.text}`}>{card.value}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{card.label}</div>
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider leading-tight">{card.label}</div>
             </div>
           </div>
         ))}
@@ -138,18 +138,18 @@ export default async function AdminDashboard() {
               </div>
             ) : (
               unverifiedCompanies.map((company) => (
-                <div key={company.id} className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                <div key={company.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className="h-12 w-12 bg-secondary-100 rounded-xl flex items-center justify-center font-black text-lg text-secondary-600 shrink-0">
                       {company.name.charAt(0)}
                     </div>
                     <div>
                       <div className="font-bold text-slate-900">{company.name}</div>
-                      <div className="text-sm text-slate-500">{company.employer.name} — {company.employer.email}</div>
+                      <div className="text-sm text-slate-500 break-all">{company.employer.name} — {company.employer.email}</div>
                       <div className="text-xs text-slate-400 mt-0.5">Location: {company.location || 'Not specified'}</div>
                     </div>
                   </div>
-                  <div className="flex gap-2 shrink-0">
+                  <div className="flex gap-2 shrink-0 ml-16 sm:ml-0">
                     <VerifyButtons companyId={company.id} />
                   </div>
                 </div>

@@ -38,17 +38,17 @@ export default async function EmployerApplicationsPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="h-10 w-10 bg-secondary-500 rounded-xl flex items-center justify-center shadow-md shadow-secondary-500/20">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="h-10 w-10 bg-secondary-500 rounded-xl flex items-center justify-center shadow-md shadow-secondary-500/20 shrink-0">
           <FileText className="h-5 w-5 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Applicant Management</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Applicant Management</h1>
           <p className="text-slate-500 text-sm mt-1">Review and manage applications for your active job listings.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden overflow-x-auto">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
           <h2 className="font-extrabold text-slate-900 text-lg">All Applications</h2>
           <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-black">{applications.length} total</span>
@@ -64,22 +64,34 @@ export default async function EmployerApplicationsPage() {
             </Link>
           </div>
         ) : (
-          <table className="w-full text-sm text-left">
-            <thead className="bg-slate-50 text-slate-500 font-bold border-b border-slate-100">
-              <tr>
-                <th className="px-6 py-4">Applicant</th>
-                <th className="px-6 py-4">Applied For</th>
-                <th className="px-6 py-4">Applied Date</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
+          <>
+            {/* Desktop table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm text-left">
+                <thead className="bg-slate-50 text-slate-500 font-bold border-b border-slate-100">
+                  <tr>
+                    <th className="px-6 py-4">Applicant</th>
+                    <th className="px-6 py-4">Applied For</th>
+                    <th className="px-6 py-4">Applied Date</th>
+                    <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {applications.map((app) => (
+                    <ApplicationTableRow key={app.id} app={app} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile card list */}
+            <div className="md:hidden divide-y divide-slate-100">
               {applications.map((app) => (
-                <ApplicationTableRow key={app.id} app={app} />
+                <ApplicationTableRow key={app.id} app={app} isMobile />
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
     </div>
