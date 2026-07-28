@@ -45,7 +45,7 @@ const roleConfig = {
   },
 }
 
-export default function MobileDashboardNav({ role }: { role: string }) {
+export default function MobileDashboardNav({ role, userName }: { role: string; userName?: string }) {
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const config = roleConfig[role as keyof typeof roleConfig] || roleConfig.SEEKER
@@ -64,8 +64,8 @@ export default function MobileDashboardNav({ role }: { role: string }) {
 
   return (
     <>
-      {/* Bottom Nav Bar */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-800 safe-area-bottom">
+      {/* Top Mobile Nav Bar (below main header) */}
+      <nav className="lg:hidden fixed top-20 left-0 right-0 z-40 bg-slate-900 border-b border-slate-800 shadow-md">
         <div className="flex items-stretch justify-around px-1 py-1">
           {bottomLinks.map((link) => {
             const Icon = link.icon
