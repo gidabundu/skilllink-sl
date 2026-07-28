@@ -3,7 +3,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Briefcase, Users, PlusCircle, Eye, Activity, TrendingUp, Calendar, AlertTriangle } from 'lucide-react'
+import { Briefcase, Users, PlusCircle, Eye, Activity, TrendingUp, Calendar, AlertTriangle, Building } from 'lucide-react'
 import { format, formatDistanceToNow } from 'date-fns'
 
 export default async function EmployerDashboard() {

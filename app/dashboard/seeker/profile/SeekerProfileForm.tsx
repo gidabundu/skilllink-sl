@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Save, Loader2, User, MapPin, Briefcase, GraduationCap, Globe, Linkedin, Plus, X } from 'lucide-react'
+import { Save, Loader2, User, MapPin, Briefcase, GraduationCap, Globe, Link2, Plus, X } from 'lucide-react'
 
 const DISTRICTS = [
   'Bo', 'Bombali', 'Bonthe', 'Falaba', 'Kailahun', 'Kambia', 'Karene',
