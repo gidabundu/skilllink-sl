@@ -9,21 +9,22 @@ function isAdmin(session: any) {
 }
 
 // PUT /api/admin/users/[id]/verify - Verify or reject employer
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!isAdmin(session)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const { approved } = await req.json()
 
     const user = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: { verified: approved },
     })
 
     if (user.role === 'EMPLOYER') {
       await prisma.company.update({
-        where: { employerId: params.id },
+        where: { employerId: id },
         data: { verified: approved },
       })
     }
@@ -31,7 +32,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     // Notify user
     await prisma.notification.create({
       data: {
-        userId: params.id,
+        userId: id,
         title: approved ? 'Account Verified!' : 'Verification Update',
         message: approved
           ? 'Your employer account has been verified. You can now post jobs!'
@@ -49,12 +50,13 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 // DELETE /api/admin/users/[id] - Delete user
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!isAdmin(session)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-    await prisma.user.delete({ where: { id: params.id } })
+    await prisma.user.delete({ where: { id } })
     return NextResponse.json({ message: 'User deleted successfully' })
   } catch (error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

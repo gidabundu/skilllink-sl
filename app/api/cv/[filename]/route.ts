@@ -6,14 +6,14 @@ import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
 
-export async function GET(req: Request, { params }: { params: { filename: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ filename: string }> }) {
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    const filename = params.filename
+    const { filename } = await params
     const safeFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '') // Sanitize
     
     // Authorization check

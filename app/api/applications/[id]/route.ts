@@ -5,8 +5,9 @@ import { authOptions } from '@/lib/auth'
 import { sendStatusUpdateEmail } from '@/lib/notifications'
 
 // PUT /api/applications/[id] - Update application status (employer)
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -15,7 +16,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const { status, notes, interviewAt } = body
 
     const application = await prisma.application.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         job: { include: { company: true } },
         seeker: true,
@@ -30,7 +31,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
 
     const updated = await prisma.application.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: status || application.status,
         notes: notes !== undefined ? notes : application.notes,
