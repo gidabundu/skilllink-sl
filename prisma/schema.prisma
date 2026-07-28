@@ -1,0 +1,118 @@
+// SkillLink SL – Prisma Schema
+// Database: SQLite (dev) → PostgreSQL (prod)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  password      String
+  role          String   @default("SEEKER") // SEEKER, EMPLOYER, ADMIN
+  avatar        String?
+  phone         String?
+  verified      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  seekerProfile  SeekerProfile?
+  company        Company?
+  applications   Application[]
+  notifications  Notification[]
+}
+
+model SeekerProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio         String?
+  location    String?
+  skills      String   @default("[]") // JSON array stored as string
+  experience  String?
+  education   String?
+  cvPath      String?
+  cvName      String?
+  linkedIn    String?
+  portfolio   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  employerId  String   @unique
+  employer    User     @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  name        String
+  logo        String?
+  description String?
+  industry    String?
+  size        String?
+  website     String?
+  location    String?
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  jobs        Job[]
+}
+
+model Job {
+  id           String    @id @default(cuid())
+  companyId    String
+  company      Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  requirements String?
+  benefits     String?
+  category     String
+  location     String
+  salary       String?
+  salaryMin    Int?
+  salaryMax    Int?
+  type         String    @default("FULL_TIME") // FULL_TIME, PART_TIME, CONTRACT, INTERNSHIP, REMOTE
+  experience   String?
+  status       String    @default("ACTIVE") // DRAFT, ACTIVE, CLOSED, EXPIRED
+  deadline     DateTime?
+  views        Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  applications Application[]
+}
+
+model Application {
+  id           String            @id @default(cuid())
+  jobId        String
+  job          Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  seekerId     String
+  seeker       User              @relation(fields: [seekerId], references: [id], onDelete: Cascade)
+  status       String            @default("PENDING") // PENDING, REVIEWED, SHORTLISTED, INTERVIEW, HIRED, REJECTED
+  coverLetter  String?
+  cvPath       String?
+  cvName       String?
+  notes        String?
+  interviewAt  DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@unique([jobId, seekerId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   @default("info") // info, success, warning, error
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+}

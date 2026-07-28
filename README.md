@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SkillLink SL 🚀
 
-## Getting Started
+Welcome to **SkillLink SL**, a modern, full-stack, world-class job portal and recruitment platform designed for job seekers, employers, and administrators. 
 
-First, run the development server:
+SkillLink SL features a premium, responsive UI built with Next.js, a robust backend powered by Prisma and PostgreSQL, and secure authentication via NextAuth.
 
+## Table of Contents
+1. [Features](#features)
+2. [Prerequisites](#prerequisites)
+3. [Installation & Setup](#installation--setup)
+4. [Environment Variables](#environment-variables)
+5. [Database Setup & Seeding](#database-setup--seeding)
+6. [Running the Application](#running-the-application)
+7. [Default Test Accounts](#default-test-accounts)
+
+---
+
+## Features
+- **Role-Based Dashboards:** Unique, secure dashboard experiences for `Admin`, `Employer`, and `Seeker`.
+- **Admin Activity Logging:** Real-time platform activity log tracking new sign-ups, job postings, and applications.
+- **Company Verification:** Admins must verify companies before they can post jobs, ensuring a high-quality, scam-free environment.
+- **Job Posting & Moderation:** Employers can manage their listings, and Admins can moderate all listings platform-wide.
+- **Application Tracking:** Seamless application process for seekers, with real-time status updates (Pending, Accepted, Rejected) managed by employers.
+- **Seeker Profiles & CV Uploads:** Seekers can build robust profiles and securely upload CVs (PDF, DOC) restricted by strong security rules.
+- **Enterprise Security:** Enforced password complexity, rate-limited auth routes, protected CV file endpoints, and strict Content-Security-Policy headers.
+- **Premium Responsive UI/UX:** A stunning "Peach/Amber" theme built with Tailwind CSS, featuring glassmorphism, micro-animations, and a dedicated mobile-bottom navigation bar for seamless smartphone usability.
+
+---
+
+## Prerequisites
+Before you begin, ensure you have the following installed on your computer:
+1. **Node.js** (v18.17 or higher recommended) - [Download Here](https://nodejs.org/)
+2. **PostgreSQL** (v14 or higher) - [Download Here](https://www.postgresql.org/download/)
+3. **Git** (optional, for cloning the repository)
+
+---
+
+## Installation & Setup
+
+**Step 1:** Extract the project files from the flash drive (or clone the repository) into a directory of your choice.
+
+**Step 2:** Open a terminal (Command Prompt, PowerShell, or Git Bash) and navigate to the project directory:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd path/to/skilllink-sl
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Step 3:** Install all required Node.js dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Variables
 
-## Learn More
+**Step 4:** In the root directory of the project, locate the `.env` file (or create one if it doesn't exist). Ensure it contains the following variables. 
 
-To learn more about Next.js, take a look at the following resources:
+*Note: Update the `DATABASE_URL` with your actual PostgreSQL credentials. For example, if your username is `postgres` and password is `password`, it would look like below:*
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+DATABASE_URL="postgresql://postgres:password@localhost:5432/skilllink?schema=public"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your_super_secret_key_change_in_production"
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Database Setup & Seeding
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Step 5:** Push the Prisma schema to your local PostgreSQL database to create the required tables:
+```bash
+npx prisma db push
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Step 6:** Seed the database with initial data (this creates the default Admin account and some sample categories):
+```bash
+npm run db:seed
+```
+*(If the seed script is not set up in `package.json`, you can run `npx tsx prisma/seed.ts` instead).*
+
+---
+
+## Running the Application
+
+**Step 7:** Start the Next.js development server:
+```bash
+npm run dev
+```
+
+**Step 8:** Open your web browser and navigate to:
+[http://localhost:3000](http://localhost:3000)
+
+---
+
+## Default Test Accounts
+After seeding the database, you can log in immediately using the pre-configured test accounts:
+
+### Admin
+- **Email:** `admin@skilllink.sl`
+- **Password:** `Admin@123`
+*(Can verify companies, moderate jobs, view analytics, and see activity logs)*
+
+### Employer
+- **Email:** `hr@freetowntech.sl`
+- **Password:** `Employer@123`
+*(Can update company profile, post jobs, and manage incoming applications)*
+
+### Job Seeker
+- **Email:** `john@example.com`
+- **Password:** `Seeker@123`
+*(Can search jobs, apply, upload CV, and manage their seeker profile)*
+
+Enjoy exploring SkillLink SL! 🎉
