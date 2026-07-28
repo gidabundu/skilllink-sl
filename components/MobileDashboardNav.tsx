@@ -50,10 +50,6 @@ export default function MobileDashboardNav({ role, userName }: { role: string; u
   const [drawerOpen, setDrawerOpen] = useState(false)
   const config = roleConfig[role as keyof typeof roleConfig] || roleConfig.SEEKER
 
-  // Show first 4 in bottom bar, rest in drawer
-  const bottomLinks = config.links.slice(0, 4)
-  const drawerLinks = config.links.slice(4)
-
   const isActive = (href: string) =>
     pathname === href || (
       href !== '/dashboard/admin' &&
@@ -64,33 +60,24 @@ export default function MobileDashboardNav({ role, userName }: { role: string; u
 
   return (
     <>
-      {/* Top Mobile Nav Bar (below main header) */}
-      <nav className="lg:hidden fixed top-20 left-0 right-0 z-40 bg-slate-900 border-b border-slate-800 shadow-md">
-        <div className="flex items-stretch justify-around px-1 py-1">
-          {bottomLinks.map((link) => {
-            const Icon = link.icon
-            const active = isActive(link.href)
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`flex flex-col items-center gap-0.5 px-2 py-2 rounded-xl flex-1 transition-colors ${
-                  active ? 'text-secondary-400 bg-white/5' : 'text-slate-500 hover:text-slate-300'
-                }`}
-              >
-                <Icon className="w-5 h-5 shrink-0" />
-                <span className="text-[9px] font-bold truncate max-w-full">{link.name}</span>
-              </Link>
-            )
-          })}
+      {/* Top Mobile Nav Bar */}
+      <nav className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-slate-900 border-b border-slate-800 shadow-md">
+        <div className="flex items-center justify-between px-4 py-2">
+          
+          {/* Logo / Brand */}
+          <Link href="/" className="flex items-center gap-2">
+            <div className="h-8 w-8 bg-white rounded-lg flex items-center justify-center p-1.5">
+              <img src="/logo.png" alt="Logo" className="object-contain h-full w-full" />
+            </div>
+            <span className="font-black text-white text-lg tracking-tight">SkillLink SL</span>
+          </Link>
 
-          {/* More button — shows overflow links or just a menu for sign out */}
+          {/* Hamburger Menu Toggle */}
           <button
             onClick={() => setDrawerOpen(true)}
-            className="flex flex-col items-center gap-0.5 px-2 py-2 rounded-xl flex-1 text-slate-500 hover:text-slate-300 transition-colors"
+            className="h-10 w-10 flex items-center justify-center rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
           >
-            <Menu className="w-5 h-5 shrink-0" />
-            <span className="text-[9px] font-bold">More</span>
+            <Menu className="w-6 h-6 shrink-0" />
           </button>
         </div>
       </nav>
@@ -117,29 +104,8 @@ export default function MobileDashboardNav({ role, userName }: { role: string; u
             </div>
 
             <div className="space-y-2">
-              {/* Overflow links (e.g. admin Analytics) */}
-              {drawerLinks.map((link) => {
-                const Icon = link.icon
-                const active = isActive(link.href)
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setDrawerOpen(false)}
-                    className={`flex items-center gap-3 p-4 rounded-2xl font-bold transition-colors ${
-                      active
-                        ? 'bg-secondary-50 text-secondary-700'
-                        : 'text-slate-700 hover:bg-slate-50'
-                    }`}
-                  >
-                    <Icon className="h-5 w-5 shrink-0" />
-                    {link.name}
-                  </Link>
-                )
-              })}
-
-              {/* All links repeated for easy access */}
-              {bottomLinks.map((link) => {
+              {/* All links in drawer */}
+              {config.links.map((link) => {
                 const Icon = link.icon
                 const active = isActive(link.href)
                 return (
