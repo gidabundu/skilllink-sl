@@ -47,11 +47,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'A job category is required.' }, { status: 400 })
     }
 
-    // Verify category exists
-    const category = await prisma.category.findUnique({ where: { id: categoryId } })
-    if (!category) {
-      return NextResponse.json({ error: 'Invalid category selected.' }, { status: 400 })
-    }
+    // No Category model – category is stored as a plain string on Job
 
     const job = await prisma.job.create({
       data: {
@@ -60,7 +56,7 @@ export async function POST(req: Request) {
         location: location.trim().substring(0, 200),
         type: type.toUpperCase(),
         salary: salary ? salary.trim().substring(0, 100) : null,
-        category: category.name,
+        category: categoryId,
         companyId: company.id,
         status: 'ACTIVE',
       },
