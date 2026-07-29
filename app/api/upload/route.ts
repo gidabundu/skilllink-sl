@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { writeFile, mkdir } from 'fs/promises'
-import { join, extname } from 'path'
+import { extname } from 'path'
 import { prisma } from '@/lib/prisma'
 
 // Strictly allowed MIME types and extensions for resumes
@@ -52,14 +51,10 @@ export async function POST(req: Request) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Ensure directory exists
-    const uploadDir = join(process.cwd(), 'public', 'uploads', 'resumes')
-    await mkdir(uploadDir, { recursive: true })
-
-    const filePath = join(uploadDir, uniqueFilename)
-    await writeFile(filePath, buffer)
-
-    const cvPath = `/uploads/resumes/${uniqueFilename}`
+    // Instead of saving to the filesystem (which fails on Vercel's read-only production environment),
+    // we convert the file to a Base64 Data URI and store it directly in the database.
+    const base64String = buffer.toString('base64')
+    const cvPath = `data:${file.type};base64,${base64String}`
 
     // Save to user's seeker profile
     await prisma.seekerProfile.update({
