@@ -29,7 +29,7 @@ function Register() {
       })
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.message || 'Registration failed')
+        throw new Error(data.error || data.message || 'Registration failed')
       }
       router.push('/auth/login?registered=true')
     } catch (err: any) {
